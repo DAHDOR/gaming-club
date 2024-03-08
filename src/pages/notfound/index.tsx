@@ -1,9 +1,7 @@
-import { FC } from "react";
+import { FC } from 'react';
 
 const NotFound: FC = () => {
-  return (
-    <h1>Page not found</h1>
-  );
-}
+  return <h1>Página no encontrada</h1>;
+};
 
 export default NotFound;

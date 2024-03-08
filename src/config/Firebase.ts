@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 
-import { initializeApp } from "firebase/app";
+import { initializeApp } from 'firebase/app';
 
 // TODO: Add SDKs for Firebase products that you want to use
 
@@ -9,17 +9,17 @@ import { initializeApp } from "firebase/app";
 // Your web app's Firebase configuration
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAHnRve7WMtamORw-4DVeZLc1ex5KhE7KE",
+  apiKey: 'AIzaSyA37VVUbRk27DeAZOiK9PCjBZot8C1KacU',
 
-  authDomain: "unimet-agrupaciones.firebaseapp.com",
+  authDomain: 'gaming-club-b1421.firebaseapp.com',
 
-  projectId: "unimet-agrupaciones",
+  projectId: 'gaming-club-b1421',
 
-  storageBucket: "unimet-agrupaciones.appspot.com",
+  storageBucket: 'gaming-club-b1421.appspot.com',
 
-  messagingSenderId: "493973400529",
+  messagingSenderId: '288896631765',
 
-  appId: "1:493973400529:web:5ed62f9810001dc7868ef0",
+  appId: '1:288896631765:web:b10bf543979a790b1ff35c',
 };
 
 // Initialize Firebase
