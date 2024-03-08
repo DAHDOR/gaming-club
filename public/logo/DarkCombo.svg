@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Capa_2" data-name="Capa 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1766 701.1">
+  <defs>
+    <style>
+      .cls-1, .cls-2, .cls-3 {
+        fill: #fff;
+      }
+
+      .cls-2 {
+        font-family: RobotoCondensed-ExtraBold, 'Roboto Condensed';
+        font-size: 229px;
+        font-variation-settings: 'wght' 800;
+        font-weight: 700;
+      }
+
+      .cls-3 {
+        font-family: RobotoCondensed-Regular, 'Roboto Condensed';
+        font-size: 234px;
+        font-variation-settings: 'wght' 400;
+      }
+    </style>
+  </defs>
+  <g id="Dark">
+    <g id="Abstract">
+      <polygon class="cls-1" points="0 0 0 339 88 307 88 0 0 0"/>
+      <polygon class="cls-1" points="132 0 132 291 220 259 220 0 132 0"/>
+      <polygon class="cls-1" points="0 383 0 639 88 639 88 351 0 383"/>
+      <polygon class="cls-1" points="132 335 131.94 639 220 639 220 303 132 335"/>
+      <polygon class="cls-1" points="264 287 264 639 352 639 352 255 264 287"/>
+    </g>
+    <g id="Word">
+      <text class="cls-3" transform="translate(454.49 414.61)"><tspan x="0" y="0">Universidad</tspan></text>
+      <text class="cls-2" transform="translate(454.54 639.04) scale(1.02 1)"><tspan x="0" y="0">Metropolitana</tspan></text>
+    </g>
+  </g>
+</svg>
