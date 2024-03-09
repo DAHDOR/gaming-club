@@ -2,20 +2,23 @@ import Router from './Router';
 import { ThemeProvider } from './context/ThemeContext';
 import ErrorBoundary from './config/ErrorBoundary';
 import GlobalStyle from './config/GlobalStyle';
-import { UserProvider } from './context/UserContext';
 import { PreferencesProvider } from './context/PreferencesContext';
+import { AuthProvider } from './context/AuthContext';
+import { ProfileProvider } from './context/ProfileContext';
 
 function App() {
   return (
     <ErrorBoundary>
-      <PreferencesProvider>
-        <UserProvider>
-          <ThemeProvider>
-            <GlobalStyle />
-            <Router />
-          </ThemeProvider>
-        </UserProvider>
-      </PreferencesProvider>
+      <ProfileProvider>
+        <AuthProvider>
+          <PreferencesProvider>
+            <ThemeProvider>
+              <GlobalStyle />
+              <Router />
+            </ThemeProvider>
+          </PreferencesProvider>
+        </AuthProvider>
+      </ProfileProvider>
     </ErrorBoundary>
   );
 }

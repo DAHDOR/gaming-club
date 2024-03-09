@@ -3,6 +3,8 @@ import { IconWrapper, Wrapper, Button, Menu, MenuButton } from './More.style';
 import { MoreIcon } from '../../common/Icons';
 import { useOutsideClick } from '../../utils/CustomHooks';
 import { PreferencesContext } from '../../context/PreferencesContext';
+import { auth } from '../../config/Firebase';
+import { signOut } from 'firebase/auth';
 
 interface MenuContextModel {
   menu: string;
@@ -25,6 +27,10 @@ const Icon: FC = () => {
 const MainMenu: FC = () => {
   const { setMenu } = useContext(MenuContext);
 
+  const handleLogout = () => {
+    signOut(auth);
+  };
+
   const themeMenu = () => {
     setMenu('theme');
   };
@@ -32,8 +38,7 @@ const MainMenu: FC = () => {
   return (
     <Menu>
       <MenuButton onClick={themeMenu}>Tema</MenuButton>
-      <MenuButton>Item 2</MenuButton>
-      <MenuButton>Item 3</MenuButton>
+      <MenuButton onClick={handleLogout}>Cerrar Sesión</MenuButton>
     </Menu>
   );
 };

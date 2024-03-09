@@ -1,12 +1,7 @@
-// Import the functions you need from the SDKs you need
-
 import { initializeApp } from 'firebase/app';
-
-// TODO: Add SDKs for Firebase products that you want to use
-
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
+import { getFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
+import { GoogleAuthProvider, getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyA37VVUbRk27DeAZOiK9PCjBZot8C1KacU',
@@ -22,6 +17,12 @@ const firebaseConfig = {
   appId: '1:288896631765:web:b10bf543979a790b1ff35c',
 };
 
-// Initialize Firebase
-
 export const app = initializeApp(firebaseConfig);
+
+export const db = getFirestore(app);
+
+export const storage = getStorage(app, 'gs://gaming-club-b1421.appspot.com');
+
+export const auth = getAuth(app);
+
+export const provider = new GoogleAuthProvider();
