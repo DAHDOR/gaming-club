@@ -35,7 +35,6 @@ const Login: FC = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
         const user = result.user;
-
         setProfile({
           id: user.uid,
           name: user.displayName as string,
@@ -44,7 +43,7 @@ const Login: FC = () => {
           clubs: [],
         });
 
-        navigate('/dashboard');
+        navigate('/');
       })
       .catch((error) => {
         console.log(error);

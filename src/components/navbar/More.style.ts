@@ -3,6 +3,13 @@ import styled from 'styled-components';
 export const IconWrapper = styled.div`
   display: grid;
   place-items: center;
+  padding: 0.7rem;
+`;
+
+export const Img = styled.img`
+  width: 3rem;
+  height: 3rem;
+  border-radius: inherit;
 `;
 
 export const Wrapper = styled.div`
@@ -14,7 +21,7 @@ export const Button = styled.button`
   height: fit-content;
   display: grid;
   place-items: center;
-  padding: 0.7rem;
+  padding: 0;
   background: ${({ theme }) => theme.main};
   border: 0.1rem solid rgba(0, 0, 0, 0);
   border-radius: 10rem;

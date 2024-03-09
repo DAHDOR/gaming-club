@@ -1,10 +1,18 @@
 import { FC, createContext, useContext, useState } from 'react';
-import { IconWrapper, Wrapper, Button, Menu, MenuButton } from './More.style';
+import {
+  IconWrapper,
+  Wrapper,
+  Button,
+  Menu,
+  MenuButton,
+  Img,
+} from './More.style';
 import { MoreIcon } from '../../common/Icons';
 import { useOutsideClick } from '../../utils/CustomHooks';
 import { PreferencesContext } from '../../context/PreferencesContext';
 import { auth } from '../../config/Firebase';
 import { signOut } from 'firebase/auth';
+import { ProfileContext } from '../../context/ProfileContext';
 
 interface MenuContextModel {
   menu: string;
@@ -17,11 +25,17 @@ const MenuContext = createContext<MenuContextModel>({
 });
 
 const Icon: FC = () => {
-  return (
-    <IconWrapper style={{ width: '1.5rem', height: '1.5rem' }}>
-      <MoreIcon />
-    </IconWrapper>
-  );
+  const { profile } = useContext(ProfileContext);
+
+  if (profile?.pfp === '') {
+    return (
+      <IconWrapper style={{ width: '1.5rem', height: '1.5rem' }}>
+        <MoreIcon />
+      </IconWrapper>
+    );
+  } else {
+    return <Img src={profile?.pfp}></Img>;
+  }
 };
 
 const MainMenu: FC = () => {
