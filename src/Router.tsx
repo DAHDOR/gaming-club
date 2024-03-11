@@ -6,6 +6,8 @@ import NotFound from './pages/notfound';
 import Login from './pages/login';
 import Signup from './pages/signup';
 import Auth from './components/auth/Auth';
+import Profile from './pages/profile';
+import Clubs from './pages'
 
 const Router: FC = () => {
   return (
@@ -24,6 +26,8 @@ const Router: FC = () => {
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/home" element={<Clubs />} />
       </Routes>
     </BrowserRouter>
   );

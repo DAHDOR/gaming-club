@@ -43,7 +43,7 @@ const Login: FC = () => {
           clubs: [],
         });
 
-        navigate('/');
+        navigate('/profile');
       })
       .catch((error) => {
         console.log(error);
