@@ -1,19 +1,18 @@
 import { FC, useContext, useState } from 'react';
 import {
-  AccessButton,
+  SubmitButton,
   Form,
   Input,
   LoginContainer,
   LoginWrapper,
   LogoContainer,
-} from '../login/Login.style';
+} from '../../common/Style';
 import Logo from '../../common/Logo';
 import { ThemeContext } from '../../context/ThemeContext';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../../config/Firebase';
 import { addDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { ProfileContext } from '../../context/ProfileContext';
-
 
 const Signup: FC = () => {
   const { theme } = useContext(ThemeContext);
@@ -33,7 +32,10 @@ const Signup: FC = () => {
     event.preventDefault();
 
     // Verificar si el videojuego ingresado por el usuario está presente en Firestore
-    const videojuegoQuery = query(collection(db, 'games'), where('name', '==', videojuego));
+    const videojuegoQuery = query(
+      collection(db, 'games'),
+      where('name', '==', videojuego)
+    );
     const videojuegoSnapshot = await getDocs(videojuegoQuery);
 
     if (!videojuegoSnapshot.empty) {
@@ -61,11 +63,9 @@ const Signup: FC = () => {
         setTimeout(() => {
           navigate('/login');
         }, 3000);
-
       } catch (error) {
         console.error('Error al añadir el perfil:', error);
       }
-
     } else {
       // El videojuego NO está presente en Firestore
       setVideojuegoValido(false);
@@ -80,14 +80,44 @@ const Signup: FC = () => {
         </LogoContainer>
         <h1>Registrar cuenta</h1>
         <Form onSubmit={handleSubmit}>
-          <Input type="text" placeholder="Nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} />
-          <Input type="text" placeholder="Apellido" value={apellido} onChange={(e) => setApellido(e.target.value)} />
-          <Input type="text" placeholder="Nombre de usuario" value={username} onChange={(e) => setUsername(e.target.value)} />
-          <Input type="text" placeholder="Correo electrónico" value={correo} onChange={(e) => setCorreo(e.target.value)} />
-          <Input type="password" placeholder="Contraseña" value={password} onChange={(e) => setPassword(e.target.value)} />
-          <Input type="text" placeholder="Videojuego preferido" value={videojuego} onChange={(e) => setVideojuego(e.target.value)} />
+          <Input
+            type="text"
+            placeholder="Nombre"
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
+          />
+          <Input
+            type="text"
+            placeholder="Apellido"
+            value={apellido}
+            onChange={(e) => setApellido(e.target.value)}
+          />
+          <Input
+            type="text"
+            placeholder="Nombre de usuario"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <Input
+            type="text"
+            placeholder="Correo electrónico"
+            value={correo}
+            onChange={(e) => setCorreo(e.target.value)}
+          />
+          <Input
+            type="password"
+            placeholder="Contraseña"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <Input
+            type="text"
+            placeholder="Videojuego preferido"
+            value={videojuego}
+            onChange={(e) => setVideojuego(e.target.value)}
+          />
           {!videojuegoValido && <p>El videojuego ingresado no es válido.</p>}
-          <AccessButton type="submit">Submit</AccessButton>
+          <SubmitButton type="submit">Submit</SubmitButton>
           {perfilValido && <p>Cuenta creada con exito!.</p>}
         </Form>
       </LoginContainer>

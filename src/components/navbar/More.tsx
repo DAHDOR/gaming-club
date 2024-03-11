@@ -13,6 +13,7 @@ import { PreferencesContext } from '../../context/PreferencesContext';
 import { auth } from '../../config/Firebase';
 import { signOut } from 'firebase/auth';
 import { ProfileContext } from '../../context/ProfileContext';
+import { useNavigate } from 'react-router-dom';
 
 interface MenuContextModel {
   menu: string;
@@ -26,22 +27,25 @@ const MenuContext = createContext<MenuContextModel>({
 
 const Icon: FC = () => {
   const { profile } = useContext(ProfileContext);
-
-  if (profile?.pfp === '') {
+  if (profile && profile.pfp !== '') {
+    return <Img src={profile.pfp}></Img>;
+  } else {
     return (
       <IconWrapper style={{ width: '1.5rem', height: '1.5rem' }}>
         <MoreIcon />
       </IconWrapper>
     );
-  } else {
-    return <Img src={profile?.pfp}></Img>;
   }
 };
 
 const MainMenu: FC = () => {
   const { setMenu } = useContext(MenuContext);
+  const { profile, setProfile } = useContext(ProfileContext);
 
-  const handleLogout = () => {
+  const navigate = useNavigate();
+
+  const onLogout = () => {
+    setProfile(null);
     signOut(auth);
   };
 
@@ -49,10 +53,19 @@ const MainMenu: FC = () => {
     setMenu('theme');
   };
 
+  const onProfile = () => {
+    navigate('/profile');
+  };
+
   return (
     <Menu>
       <MenuButton onClick={themeMenu}>Tema</MenuButton>
-      <MenuButton onClick={handleLogout}>Cerrar Sesión</MenuButton>
+      {profile && (
+        <>
+          <MenuButton onClick={onProfile}>Perfil</MenuButton>
+          <MenuButton onClick={onLogout}>Cerrar sesión</MenuButton>
+        </>
+      )}
     </Menu>
   );
 };

@@ -77,20 +77,20 @@ export const Input = styled.input`
   }
 `;
 
-export const AccessButton = styled.button`
+export const SubmitButton = styled.button`
   padding: 0.5rem 1rem 0.6rem 1rem;
   width: fit-content;
   border: none;
   border-radius: 0.5rem;
   background-color: ${({ theme }) => theme.button};
-  color: ${({ theme }) => theme.text};
+  color: #eeeeee;
   cursor: pointer;
   &:active {
     background-color: ${({ theme }) => theme.clicked};
   }
 `;
 
-export const SignUpButton = styled.button`
+export const ChangeSignButton = styled.button`
   padding: 0;
   margin: 1rem 0rem 1.2rem 0rem;
   border: none;

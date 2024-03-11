@@ -14,6 +14,7 @@ export const Img = styled.img`
 
 export const Wrapper = styled.div`
   position: relative;
+  z-index: 10;
 `;
 
 export const Button = styled.button`

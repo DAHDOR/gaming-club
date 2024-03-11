@@ -11,7 +11,6 @@ export const NavbarContainer = styled.nav`
 
 export const LeftContainer = styled.div`
   display: flex;
-  flex-grow: 1;
   align-items: center;
   padding: 1.2rem;
   padding-left: 1.5rem;
@@ -20,8 +19,20 @@ export const LeftContainer = styled.div`
   font-weight: 300;
 `;
 
+export const HomeRedirect = styled.button`
+  padding: 0;
+  display: flex;
+  flex: none;
+  background: transparent;
+  border: none;
+  height: 100%;
+  min-width: 10rem;
+  cursor: pointer;
+`;
+
 export const RightContainer = styled.div`
   display: flex;
+  flex-grow: 1;
   justify-content: flex-end;
   align-items: center;
   padding-right: 1.5rem;
