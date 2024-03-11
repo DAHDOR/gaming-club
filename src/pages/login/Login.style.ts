@@ -12,10 +12,11 @@ export const LoginWrapper = styled.div`
 `;
 
 export const LoginContainer = styled.div`
-  margin: 5rem;
+  margin: 10rem;
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 30rem;
   max-width: 100%;
   max-height: 100%;
   padding: 3rem 4rem;
@@ -30,11 +31,35 @@ export const LogoContainer = styled.div`
 `;
 
 export const Form = styled.form`
+  margin-top: 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
   width: 100%;
+`;
+
+export const InputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  height: fit-content;
+`;
+
+export const SubmitContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+`;
+
+export const ErrorText = styled.div`
+  min-height: 1.3rem;
+  margin-top: 0.2rem;
+  height: fit-content;
+  color: #c10404;
+  width: fit-content;
 `;
 
 export const Input = styled.input`

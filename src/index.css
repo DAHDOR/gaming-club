@@ -10,7 +10,8 @@ body {
 }
 
 button,
-input {
+input,
+div {
   font-family: 'Roboto', sans-serif;
 }
 
