@@ -1,13 +1,13 @@
 import { FC, useEffect, useState } from 'react';
-import { db } from '../config/Firebase'; // Asegúrate de tener tu configuración de Firebase
+import { db } from '../config/Firebase';
 import { collection, getDocs } from 'firebase/firestore';
+import { Link } from 'react-router-dom';
 
 interface Club {
     id: string;
     description: string;
     name: string;
     games: string[];
-    // Incluye otros campos según los datos de tus clubes
 }
 
 
@@ -32,10 +32,13 @@ const Clubs: FC = () => {
     return (
         <div>
             {clubs.map((club) => (
-                <div key={club.id} style={{ border: '1px solid #ccc', padding: '20px', margin: '10px', borderRadius: '5px' }}>
-                    <h2>{club.name}</h2>
-                    <p>{club.description}</p>
-                </div>
+                // Envuelve cada club con Link para hacerlo clickeable
+                <Link to={`/club/${club.id}`} key={club.id} style={{ textDecoration: 'none', color: 'inherit' }}>
+                    <div style={{ border: '1px solid #ccc', padding: '20px', margin: '10px', borderRadius: '5px', cursor: 'pointer' }}>
+                        <h2>{club.name}</h2>
+                        <p>{club.description}</p>
+                    </div>
+                </Link>
             ))}
         </div>
     );

@@ -7,6 +7,7 @@ import Login from './pages/login';
 import Signup from './pages/signup';
 import Auth from './components/auth/Auth';
 import Profile from './pages/profile';
+import ClubDetails from './pages/clubdetails';
 
 const Router: FC = () => {
   return (
@@ -21,6 +22,7 @@ const Router: FC = () => {
               </Auth>
             }
           />
+          <Route path="/club/:clubId" element={<ClubDetails />} />
           <Route
             path="*"
             element={
