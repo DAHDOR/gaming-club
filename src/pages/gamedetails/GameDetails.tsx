@@ -30,7 +30,7 @@ const GameDetails: FC = () => {
     <div>
       <h1>{game.name}</h1>
       <p>{game.description}</p>
-      {/* Muestra más detalles del juego aquí, porque no recuerdo si tiene mas campos y no puedo fer firebase */} 
+      <p>{game.genre}</p>
     </div>
   );
 };
