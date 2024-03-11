@@ -122,7 +122,25 @@ const Login: FC = () => {
       });
   };
 
-  const isMobile = useMediaQuery({ query: '(max-width: 25rem)' });
+  const onGoogleLogin = () => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const user = result.user;
+        setProfile({
+          id: user.uid,
+          name: user.displayName as string,
+          email: user.email as string,
+          pfp: user.photoURL || '',
+          clubs: [],
+        });
+        navigate('/');
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const isMobile = useMediaQuery({ query: '(max-width: 30rem)' });
 
   return (
     <LoginWrapper>
@@ -137,6 +155,7 @@ const Login: FC = () => {
               style={
                 validEmail || emailEmpty ? {} : { border: '1px solid #ff2200' }
               }
+              value={email}
               type="email"
               placeholder="Correo electrónico"
               onChange={onEmailChange}
@@ -150,6 +169,7 @@ const Login: FC = () => {
               style={
                 validPwd || pwdEmpty ? {} : { border: '1px solid #ff2200' }
               }
+              value={pwd}
               type="password"
               placeholder="Contraseña"
               onChange={onPasswordChange}
