@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../config/Firebase';
+import { Link } from 'react-router-dom';
 
 const ClubDetails: FC = () => {
   const [club, setClub] = useState(null);
@@ -27,21 +28,20 @@ const ClubDetails: FC = () => {
   }
 
   return (
-    <div>
-      <h1>{club.name}</h1>
-      <p>{club.description}</p>
-      {/* Muestra la lista de juegos si existe */}
-      {club.games && club.games.length > 0 && (
-        <div>
-          <h2>Juegos</h2>
-          <ul>
-            {club.games.map((game, id) => (
-              <li key={id}>{game.name}</li> // ID como key
-            ))}
-          </ul>
-        </div>
-      )}
-    </div>
+    {club.games && club.games.length > 0 && (
+      <div>
+        <h1>{club.name}</h1>
+        <p>{club.description}</p>
+        <h2>Juegos</h2>
+        <ul>
+          {club.games.map((game, index) => (
+            <li key={index}>
+              <Link to={`/game/${game.id}`}>{game.name}</Link> {/* Usar game.id para la URL */}
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
   );
 };
 
