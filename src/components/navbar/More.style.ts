@@ -12,11 +12,6 @@ export const Img = styled.img`
   border-radius: inherit;
 `;
 
-export const Wrapper = styled.div`
-  position: relative;
-  z-index: 10;
-`;
-
 export const Button = styled.button`
   width: fit-content;
   height: fit-content;

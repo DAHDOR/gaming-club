@@ -30,6 +30,20 @@ export const HomeRedirect = styled.button`
   cursor: pointer;
 `;
 
+export const Redirect = styled.button`
+  margin: 0 1rem;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid ${({ theme }) => theme.text};
+  width: fit-content;
+  cursor: pointer;
+  transition: all 0.2s ease;
+`;
+
 export const RightContainer = styled.div`
   display: flex;
   flex-grow: 1;

@@ -1,4 +1,4 @@
-import { FC, useContext, useState } from 'react';
+import { FC, useContext, useEffect, useState } from 'react';
 import {
   SubmitButton,
   ErrorText,
@@ -9,12 +9,12 @@ import {
   GoogleContainer,
   Input,
   InputContainer,
-  LoginContainer,
-  LoginWrapper,
+  FormContainer,
+  FormWrapper,
   LogoContainer,
   ChangeSignButton,
   SubmitContainer,
-} from '../../common/Style';
+} from '../../common/General.style';
 import Logo from '../../common/Logo';
 import { ThemeContext } from '../../context/ThemeContext';
 import { GoogleIcon } from '../../common/Icons';
@@ -24,7 +24,7 @@ import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { auth, db, provider } from '../../config/Firebase';
 import { ProfileContext } from '../../context/ProfileContext';
 import { doc, getDoc } from 'firebase/firestore';
-import Profile from '../../models/Profile';
+import Profile, { isProfile } from '../../models/Profile';
 
 const Login: FC = () => {
   const [email, setEmail] = useState('');
@@ -39,7 +39,7 @@ const Login: FC = () => {
   const [invalid, setInvalid] = useState(false);
 
   const { theme } = useContext(ThemeContext);
-  const { setProfile } = useContext(ProfileContext);
+  const { profile, setProfile } = useContext(ProfileContext);
 
   const navigate = useNavigate();
 
@@ -77,17 +77,29 @@ const Login: FC = () => {
 
   const onGoogleLogin = () => {
     signInWithPopup(auth, provider)
-      .then((result) => {
+      .then(async (result) => {
         const user = result.user;
-        setProfile({
-          id: user.uid,
-          name: user.displayName as string,
-          email: user.email as string,
-          pfp: user.photoURL || '',
-          clubs: [],
-        });
-
-        navigate('/');
+        const profileRef = doc(db, 'profile', user.uid);
+        const profileSnap = await getDoc(profileRef);
+        if (profileSnap.exists()) {
+          const profile = profileSnap.data();
+          if (isProfile(profile)) {
+            setProfile(profile);
+            navigate('/');
+          } else {
+            console.error('Type error: profile is not a Profile object');
+          }
+        } else {
+          setProfile({
+            id: user.uid,
+            name: user.displayName || '',
+            username: '',
+            email: user.email || '',
+            pfp: user.photoURL || '',
+            game: '',
+            clubs: [],
+          });
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -99,7 +111,7 @@ const Login: FC = () => {
 
     setLoggingIn(true);
     setInvalid(false);
-
+    console.log('Logging in');
     signInWithEmailAndPassword(auth, email, pwd)
       .then((userCredential) => {
         const id = userCredential.user.uid;
@@ -108,8 +120,10 @@ const Login: FC = () => {
           setProfile({
             id: data.id,
             name: data.name,
+            username: data.username,
             email: data.email,
             pfp: data.pfp,
+            game: data.game,
             clubs: data.clubs,
           });
         });
@@ -124,13 +138,19 @@ const Login: FC = () => {
 
   const isMobile = useMediaQuery({ query: '(max-width: 30rem)' });
 
+  useEffect(() => {
+    if (profile) {
+      navigate('/');
+    }
+  }, [profile, navigate]);
+
   return (
-    <LoginWrapper>
-      <LoginContainer>
+    <FormWrapper>
+      <FormContainer>
         <LogoContainer>
           <Logo theme={theme.name === 'dark' ? 'dark' : 'color'} mode="combo" />
         </LogoContainer>
-        <h1>Clubes de Videojuegos</h1>
+        <h1>Iniciar Sesión</h1>
         <Form onSubmit={onSubmit}>
           <InputContainer>
             <Input
@@ -170,7 +190,7 @@ const Login: FC = () => {
                   : { cursor: 'not-allowed', backgroundColor: theme.main }
               }
               type="submit"
-              disabled={!validEmail || !validPwd}
+              disabled={!validEmail || !validPwd || loggingIn}
             >
               {loggingIn ? 'Iniciando Sesión...' : 'Iniciar Sesión'}
             </SubmitButton>
@@ -190,8 +210,8 @@ const Login: FC = () => {
             )}
           </GoogleButton>
         </GoogleContainer>
-      </LoginContainer>
-    </LoginWrapper>
+      </FormContainer>
+    </FormWrapper>
   );
 };
 

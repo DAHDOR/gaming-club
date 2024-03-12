@@ -9,6 +9,7 @@ import Auth from './components/auth/Auth';
 import Profile from './pages/profile';
 import ClubDetails from './pages/clubdetails';
 import GameDetails from './pages/gamedetails';
+import Games from './pages/games';
 
 const Router: FC = () => {
   return (
@@ -23,8 +24,22 @@ const Router: FC = () => {
               </Auth>
             }
           />
-          <Route path="/club/:clubId" element={<ClubDetails />} />
-          <Route path="/game/:gameId" element={<GameDetails />} />
+          <Route
+            path="/club/:clubId"
+            element={
+              <Auth>
+                <ClubDetails />
+              </Auth>
+            }
+          />
+          <Route
+            path="/game/:gameId"
+            element={
+              <Auth>
+                <GameDetails />
+              </Auth>
+            }
+          />
           <Route
             path="*"
             element={
@@ -41,6 +56,7 @@ const Router: FC = () => {
               </Auth>
             }
           />
+          <Route path="/games" element={<Games />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
         </Route>

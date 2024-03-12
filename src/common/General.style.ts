@@ -1,17 +1,59 @@
 import styled from 'styled-components';
 
-export const LoginWrapper = styled.div`
+export const Container = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  gap: 1.5rem;
+  width: calc(100vw - 3rem);
+  height: calc(100vh - 6.1rem);
+  overflow: scroll;
+  z-index: 0;
+`;
+
+export const ItemButton = styled.button`
+  padding: 0;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: ${({ theme }) => theme.background};
+  color: ${({ theme }) => theme.text};
+  transition: background-color 0.1s ease;
+  cursor: pointer;
+  &:hover {
+    background-color: ${({ theme }) => theme.hover};
+  }
+  &:active {
+    background-color: ${({ theme }) => theme.stroke};
+  }
+`;
+
+export const ItemContainer = styled.div`
+  border: 1px solid ${({ theme }) => theme.stroke};
+  padding: 2rem;
+  color: ${({ theme }) => theme.text};
+  text-decoration: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+`;
+
+export const DropdownWrapper = styled.div`
+  position: relative;
+  z-index: 10;
+`;
+
+export const FormWrapper = styled.div`
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100vw;
-  height: 100vh;
+  height: calc(100vh - 6.1rem);
   overflow: hidden;
   z-index: 0;
 `;
 
-export const LoginContainer = styled.div`
+export const FormContainer = styled.div`
   margin: 10rem;
   display: flex;
   flex-direction: column;
@@ -47,21 +89,6 @@ export const InputContainer = styled.div`
   height: fit-content;
 `;
 
-export const SubmitContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-`;
-
-export const ErrorText = styled.div`
-  min-height: 1.3rem;
-  margin-top: 0.2rem;
-  height: fit-content;
-  color: #c10404;
-  width: fit-content;
-`;
-
 export const Input = styled.input`
   padding: 0.5rem 0.7rem;
   width: 100%;
@@ -77,6 +104,28 @@ export const Input = styled.input`
   }
 `;
 
+export const SearchInput = styled.input`
+  padding: 0.5rem 0.7rem;
+  width: calc(100% - 2rem);
+  border: 1px solid ${({ theme }) => theme.stroke};
+  border-radius: 3rem;
+  background-color: ${({ theme }) => theme.background};
+  color: ${({ theme }) => theme.text};
+  transition: border-color 0.1s ease;
+  outline: none;
+  font-size: 1.2rem;
+  &:focus {
+    border-color: ${({ theme }) => theme.emphasis};
+  }
+`;
+
+export const SubmitContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+`;
+
 export const SubmitButton = styled.button`
   padding: 0.5rem 1rem 0.6rem 1rem;
   width: fit-content;
@@ -88,6 +137,14 @@ export const SubmitButton = styled.button`
   &:active {
     background-color: ${({ theme }) => theme.clicked};
   }
+`;
+
+export const ErrorText = styled.div`
+  min-height: 1.3rem;
+  margin-top: 0.2rem;
+  height: fit-content;
+  color: #c10404;
+  width: fit-content;
 `;
 
 export const ChangeSignButton = styled.button`
@@ -129,6 +186,7 @@ export const GoogleButtonContent = styled.div`
 `;
 
 export const GoogleButtonText = styled(GoogleButtonContent)`
-  margin-top: 0.15rem;
+  margin-top: 0.2rem;
   margin-right: 0.2rem;
+  color: #eeeeee;
 `;

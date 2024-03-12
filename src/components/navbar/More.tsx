@@ -1,12 +1,5 @@
 import { FC, createContext, useContext, useState } from 'react';
-import {
-  IconWrapper,
-  Wrapper,
-  Button,
-  Menu,
-  MenuButton,
-  Img,
-} from './More.style';
+import { IconWrapper, Button, Menu, MenuButton, Img } from './More.style';
 import { MoreIcon } from '../../common/Icons';
 import { useOutsideClick } from '../../utils/CustomHooks';
 import { PreferencesContext } from '../../context/PreferencesContext';
@@ -14,6 +7,7 @@ import { auth } from '../../config/Firebase';
 import { signOut } from 'firebase/auth';
 import { ProfileContext } from '../../context/ProfileContext';
 import { useNavigate } from 'react-router-dom';
+import { DropdownWrapper } from '../../common/General.style';
 
 interface MenuContextModel {
   menu: string;
@@ -114,14 +108,14 @@ const Kebab: FC = () => {
 
   return (
     <MenuContext.Provider value={{ menu: menu, setMenu: setMenu }}>
-      <Wrapper ref={dropdownRef}>
+      <DropdownWrapper ref={dropdownRef}>
         <Button onClick={toggleDropdown}>
           <Icon />
         </Button>
         {dropdown &&
           ((menu === 'main' && <MainMenu />) ||
             (menu === 'theme' && <ThemeMenu />))}
-      </Wrapper>
+      </DropdownWrapper>
     </MenuContext.Provider>
   );
 };

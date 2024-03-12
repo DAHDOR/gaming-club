@@ -1,37 +1,47 @@
 import { FC, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../config/Firebase';
+import Game, { isGame } from '../../models/Game';
+import { Container } from '../../common/General.style';
 
 const GameDetails: FC = () => {
-  const [game, setGame] = useState(null);
+  const [game, setGame] = useState<Game | null>(null);
   const { gameId } = useParams(); // Obtiene el gameId de la URL
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchGame = async () => {
-      const docRef = doc(db, 'games', gameId);
-      const docSnap = await getDoc(docRef);
-
-      if (docSnap.exists()) {
-        setGame({ id: docSnap.id, ...docSnap.data() });
+      if (gameId) {
+        const gameRef = doc(db, 'games', gameId);
+        const gameSnap = await getDoc(gameRef);
+        if (gameSnap.exists()) {
+          const game = gameSnap.data();
+          if (isGame(game)) {
+            setGame(game);
+          }
+        } else {
+          navigate('/');
+        }
       } else {
-        console.log('No such document!');
+        navigate('/');
       }
     };
-
+    console.log('Fetching game');
     fetchGame();
-  }, [gameId]);
+  }, [gameId, navigate]);
 
   if (!game) {
-    return <div>Loading...</div>;
+    return <h1>Cargando...</h1>;
   }
 
   return (
-    <div>
-      <h1>{game.name}</h1>
-      <p>{game.description}</p>
-      <p>{game.genre}</p>
-    </div>
+    <Container>
+      <h1 style={{ margin: '0' }}>{game.name}</h1>
+      <h4 style={{ margin: '0' }}>Género: {game.genre}</h4>
+      <h3 style={{ margin: '0' }}>{game.description}</h3>
+    </Container>
   );
 };
 

@@ -1,10 +1,10 @@
-import { FC, useContext, useState } from 'react';
+import { FC, useContext, useEffect, useState } from 'react';
 import {
   SubmitButton,
   Form,
   Input,
-  LoginContainer,
-  LoginWrapper,
+  FormContainer,
+  FormWrapper,
   LogoContainer,
   ChangeSignButton,
   GoogleContainer,
@@ -14,15 +14,20 @@ import {
   InputContainer,
   ErrorText,
   SubmitContainer,
-} from '../../common/Style';
+} from '../../common/General.style';
 import Logo from '../../common/Logo';
 import { ThemeContext } from '../../context/ThemeContext';
 import { useNavigate } from 'react-router-dom';
-import { auth, provider } from '../../config/Firebase';
+import { auth, db, provider } from '../../config/Firebase';
 import { ProfileContext } from '../../context/ProfileContext';
 import { GoogleIcon } from '../../common/Icons';
 import { useMediaQuery } from 'react-responsive';
-import { signInWithPopup } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
+import Profile, { isProfile } from '../../models/Profile';
+import Game, { isGame } from '../../models/Game';
+import { useOutsideClick } from '../../utils/CustomHooks';
+import { DropdownWrapper, Menu, MenuButton } from './SignUp.style';
 
 const Signup: FC = () => {
   const [name, setName] = useState('');
@@ -68,7 +73,6 @@ const Signup: FC = () => {
   const onUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
     setUsernameUnique(true);
-    // TODO: check if username is unique
     const re = /^(?=.*[a-zA-Z])[a-zA-Z0-9_]([a-zA-Z0-9_.]{0,28}[a-zA-Z0-9_])?$/;
     if (re.test(e.target.value)) {
       setValidUsername(true);
@@ -84,12 +88,12 @@ const Signup: FC = () => {
   };
 
   const [email, setEmail] = useState('');
-  const [emailExists, setEmailExists] = useState(false);
+  const [emailUnique, setEmailUnique] = useState(false);
   const [validEmail, setValidEmail] = useState(false);
   const [emailEmpty, setEmailEmpty] = useState(true);
   const onEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
-    setEmailExists(false);
+    setEmailUnique(true);
     if (e.target.validity.valid && e.target.value.length > 0) {
       setValidEmail(true);
     } else {
@@ -136,25 +140,70 @@ const Signup: FC = () => {
     }
   };
 
-  /* const [game, setGame] = useState('');
-  const onGameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setGame(e.target.value);
-    // TODO
-  }; */
+  const [games, setGames] = useState<Game[]>([]);
+  const [gameId, setGameId] = useState('');
+  const [gameName, setGameName] = useState('');
+  const [searchGame, setSearchGame] = useState('');
+  const onSearchGameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchGame(e.target.value);
+  };
+
+  const [dropdown, setDropdown] = useState(false);
+
+  const dropdownRef = useOutsideClick(() => {
+    setDropdown(false);
+  });
 
   const [signingUp, setSigningUp] = useState(false);
 
   const { theme } = useContext(ThemeContext);
-  const { setProfile } = useContext(ProfileContext);
+  const { profile, setProfile } = useContext(ProfileContext);
 
   const navigate = useNavigate();
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setSigningUp(true);
-    // TODO: check if email is in db
-    // TODO: check if username is unique
-    // TODO: create user & profile
+
+    const profilesRef = collection(db, 'profiles');
+    const profilesSnap = await getDocs(profilesRef);
+    const profileList: Profile[] = [];
+    profilesSnap.forEach((doc) => {
+      const profile = doc.data();
+      if (isProfile(profile)) {
+        profileList.push(profile);
+        if (profile && profile.email === email) {
+          setEmailUnique(false);
+        }
+        if (profile && profile.username === username) {
+          setUsernameUnique(false);
+        }
+      }
+    });
+
+    if (emailUnique && usernameUnique) {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        pwd
+      );
+
+      const profileRef = doc(db, 'profiles', userCredential.user.uid);
+      const profileData: Profile = {
+        id: userCredential.user.uid,
+        name: `${name} ${lastName}`,
+        username: username,
+        email: email,
+        pfp: '',
+        game: gameId,
+        clubs: [],
+      };
+      await setDoc(profileRef, profileData);
+      setProfile(profileData);
+      navigate('/');
+    } else {
+      setSigningUp(false);
+    }
   };
 
   const onLogin = () => {
@@ -163,16 +212,29 @@ const Signup: FC = () => {
 
   const onGoogleLogin = () => {
     signInWithPopup(auth, provider)
-      .then((result) => {
+      .then(async (result) => {
         const user = result.user;
-        setProfile({
-          id: user.uid,
-          name: user.displayName as string,
-          email: user.email as string,
-          pfp: user.photoURL || '',
-          clubs: [],
-        });
-        navigate('/');
+        const profileRef = doc(db, 'profile', user.uid);
+        const profileSnap = await getDoc(profileRef);
+        if (profileSnap.exists()) {
+          const profile = profileSnap.data();
+          if (isProfile(profile)) {
+            setProfile(profile);
+            navigate('/');
+          } else {
+            console.error('Type error: profile is not a Profile object');
+          }
+        } else {
+          setProfile({
+            id: user.uid,
+            name: user.displayName || '',
+            username: '',
+            email: user.email || '',
+            pfp: user.photoURL || '',
+            game: '',
+            clubs: [],
+          });
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -181,9 +243,31 @@ const Signup: FC = () => {
 
   const isMobile = useMediaQuery({ query: '(max-width: 30rem)' });
 
+  useEffect(() => {
+    if (profile) {
+      navigate('/');
+    }
+
+    const fetchGames = async () => {
+      const gamesRef = collection(db, 'games');
+      const gamesSnap = await getDocs(gamesRef);
+      const gameList: Game[] = [];
+      gamesSnap.forEach((doc) => {
+        const game = doc.data();
+        if (isGame(game)) {
+          gameList.push(game);
+        }
+      });
+      setGames(gameList);
+    };
+
+    console.log('Fetching games');
+    fetchGames();
+  }, [profile, navigate]);
+
   return (
-    <LoginWrapper>
-      <LoginContainer>
+    <FormWrapper>
+      <FormContainer>
         <LogoContainer>
           <Logo theme={theme.name === 'dark' ? 'dark' : 'color'} mode="combo" />
         </LogoContainer>
@@ -286,8 +370,41 @@ const Signup: FC = () => {
             <ErrorText>
               {validConfirmPwd || confirmPwdEmpty
                 ? ''
-                : 'Las contraseñas no son iguales'}
+                : 'Las contraseñas no coinciden'}
             </ErrorText>
+          </InputContainer>
+          <InputContainer>
+            <DropdownWrapper ref={dropdownRef}>
+              <Input
+                placeholder={
+                  gameName === '' ? 'Buscar juego favorito...' : gameName
+                }
+                onChange={onSearchGameChange}
+                value={searchGame}
+                onFocus={() => setDropdown(true)}
+              />
+              {dropdown && (
+                <Menu>
+                  {games
+                    .filter((game) =>
+                      game.name.toLowerCase().includes(searchGame.toLowerCase())
+                    )
+                    .map((game) => (
+                      <MenuButton
+                        key={game.id}
+                        onClick={() => {
+                          setGameId(game.id);
+                          setGameName(game.name);
+                          setSearchGame('');
+                          setDropdown(false);
+                        }}
+                      >
+                        {game.name}
+                      </MenuButton>
+                    ))}
+                </Menu>
+              )}
+            </DropdownWrapper>
           </InputContainer>
           <SubmitContainer>
             <SubmitButton
@@ -298,6 +415,7 @@ const Signup: FC = () => {
                 validEmail &&
                 validPwd &&
                 validConfirmPwd &&
+                gameId !== '' &&
                 !signingUp
                   ? {}
                   : { cursor: 'not-allowed', backgroundColor: theme.main }
@@ -309,15 +427,17 @@ const Signup: FC = () => {
                 !validUsername ||
                 !validEmail ||
                 !validPwd ||
-                !validConfirmPwd
+                !validConfirmPwd ||
+                gameId === '' ||
+                signingUp
               }
             >
               {signingUp ? 'Registrando...' : 'Registrarse'}
             </SubmitButton>
-            {emailExists && (
+            {!emailUnique && (
               <ErrorText>El correo electrónico ya está registrado.</ErrorText>
             )}
-            {usernameUnique && (
+            {!usernameUnique && (
               <ErrorText>El nombre de usuario ya está en uso.</ErrorText>
             )}
           </SubmitContainer>
@@ -335,8 +455,8 @@ const Signup: FC = () => {
             )}
           </GoogleButton>
         </GoogleContainer>
-      </LoginContainer>
-    </LoginWrapper>
+      </FormContainer>
+    </FormWrapper>
   );
 };
 
