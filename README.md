@@ -2,10 +2,10 @@
 
 ## Microproyecto 2: Gaming Club
 
-Materia: Sistemas de Información
-Sección: 3
-Trimestre: 2324-2
-Profesora: Keyla Rivas
+Materia: Sistemas de Información</br>
+Sección: 3</br>
+Trimestre: 2324-2</br>
+Profesora: Keyla Rivas</br>
 Autores:
 
 - Diego Hernández
